@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">AppFACOSTA</string>
+    <string name="app_name">Insercode</string>
+    <!-- Reemplazar por el "Web client ID" de Google Cloud Console (tipo OAuth "Aplicación web") -->
+    <string name="google_web_client_id">TU_WEB_CLIENT_ID.apps.googleusercontent.com</string>
 </resources>

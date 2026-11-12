@@ -1,0 +1,79 @@
+package com.duoc.appfacosta.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.duoc.appfacosta.data.model.UserSession
+import com.duoc.appfacosta.ui.components.DarkCard
+import com.duoc.appfacosta.ui.theme.*
+
+@Composable
+fun ProfileScreen(session: UserSession, onLogout: () -> Unit) {
+    var twoStep by remember { mutableStateOf(true) }
+    var push by remember { mutableStateOf(true) }
+    var critical by remember { mutableStateOf(true) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Text("Mi perfil", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
+        DarkCard {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier.size(56.dp).clip(CircleShape).background(Accent),
+                    contentAlignment = Alignment.Center
+                ) { Text(session.initials, color = TextMain, fontWeight = FontWeight.Bold) }
+                Spacer(Modifier.width(14.dp))
+                Column {
+                    Text(session.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(session.email, color = TextMuted, fontSize = 12.sp)
+                    Text("Guardián · Zona Sur", color = Accent, fontSize = 12.sp)
+                }
+            }
+        }
+
+        Text("Seguridad", fontWeight = FontWeight.SemiBold)
+        DarkCard {
+            ToggleRow("Verificación en 2 pasos", "Protección adicional activada", twoStep) { twoStep = it }
+            ToggleRow("Notificaciones push", "Avisos activados", push) { push = it }
+            ToggleRow("Alertas críticas", "Siempre visibles y sonoras", critical) { critical = it }
+        }
+
+        Button(
+            onClick = onLogout,
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Danger.copy(alpha = 0.15f)),
+            shape = RoundedCornerShape(16.dp)
+        ) { Text("Cerrar sesión", color = Danger, fontWeight = FontWeight.SemiBold) }
+    }
+}
+
+@Composable
+private fun ToggleRow(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, fontWeight = FontWeight.Medium)
+            Text(subtitle, color = TextMuted, fontSize = 12.sp)
+        }
+        Switch(checked = checked, onCheckedChange = onChange)
+    }
+}
